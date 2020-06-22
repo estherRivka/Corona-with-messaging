@@ -2,6 +2,7 @@
 using AutoMapper;
 using CoronaApp.Entities;
 using CoronaApp.Services.Models;
+using Messages.Commands;
 using Messages.Events;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -68,7 +69,7 @@ namespace CoronaApp.Services
             Patient newPatientFromDbs = await _patientRepository.Save(patient);
             Log.Information("Patient Created {@newPatient}", newPatient);
 
-           await PublishPatientCreated(newPatientFromDbs.PatientId);
+           await PublishPatientCreated(newPatientFromDbs);
             return _mapper.Map<PatientModel>(newPatientFromDbs);
         }
 
@@ -130,12 +131,12 @@ namespace CoronaApp.Services
         //}
 
 
-        public async Task PublishPatientCreated(int PatientId)
+        public async Task PublishPatientCreated(Patient patient)
         {
 
-            await _messageSession.Publish<IPatientCreatedV_2>(message =>
+            await _messageSession.Publish<INotifyQuarantine>(message =>
             {
-                message.PatientId = PatientId;
+                message.PatientId = patient.PatientId;
             })
                  .ConfigureAwait(false);
         }
