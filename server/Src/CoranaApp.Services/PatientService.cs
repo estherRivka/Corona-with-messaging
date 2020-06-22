@@ -2,7 +2,6 @@
 using AutoMapper;
 using CoronaApp.Entities;
 using CoronaApp.Services.Models;
-using Messages;
 using Messages.Events;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
