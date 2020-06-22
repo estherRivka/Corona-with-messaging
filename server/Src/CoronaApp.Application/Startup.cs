@@ -31,7 +31,6 @@ namespace CoronaApp.Api
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
         }
 
         public IConfiguration Configuration { get; }
@@ -39,17 +38,19 @@ namespace CoronaApp.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public async void ConfigureServices(IServiceCollection services)
         {
-            /*            var endpointConfiguration = new EndpointConfiguration("CoronaApplication");
 
-                        var transport = endpointConfiguration.UseTransport<LearningTransport>();*/
+     /*  var endpointConfiguration = new EndpointConfiguration("CoronaApplication");
 
-            /*           */
-       //     var endpointInstance = await NServiceBus.Endpoint.Start(endpointConfiguration);
+             var transport = endpointConfiguration.UseTransport<LearningTransport>();
 
-              //  var endpointInstance = services.BuildServiceProvider().GetService<IMessageSession>();
-            //.ConfigureAwait(false);
 
-           // services.AddScoped(typeof(IEndpointInstance), x => endpointInstance);
+            var endpointInstance = await NServiceBus.Endpoint.Start(endpointConfiguration);
+
+            var endpointInstance = services.BuildServiceProvider().GetService<IMessageSession>()
+            .ConfigureAwait(false);
+
+            services.AddScoped(typeof(IEndpointInstance), x => endpointInstance);*/
+
             services.AddScoped(typeof(IPatientRepository), typeof(PatientRepository));
             services.AddScoped(typeof(IPathRepository), typeof(PathRepository));
             services.AddScoped(typeof(IPathService), typeof(PathService));
@@ -76,9 +77,9 @@ namespace CoronaApp.Api
                     });
 
             });
-            
 
-           // services.AddIEndpointInstance();
+
+            // services.AddIEndpointInstance();
             var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("AppSettings:Secret"));
             //var appSettingsSection = Configuration.GetSection("AppSettings");
             //services.Configure<AppSettings>(appSettingsSection);
@@ -129,17 +130,17 @@ namespace CoronaApp.Api
                 {
                     setupAction.SwaggerDoc(
                                      $"CoronaAppOpenApiSpecification{description.GroupName}", new Microsoft.OpenApi.Models.OpenApiInfo()
-                {
-                    Title = "Corona Api",
-                    Version = description.ApiVersion.ToString(),
-                    Description = "this app provides information about The Corona virus cases",
-                    Contact = new Microsoft.OpenApi.Models.OpenApiContact()
-                    {
-                        Name = "Tzippy Freedman",
-                        Email = "tzippyfreedman1@gmail.com",
+                                     {
+                                         Title = "Corona Api",
+                                         Version = description.ApiVersion.ToString(),
+                                         Description = "this app provides information about The Corona virus cases",
+                                         Contact = new Microsoft.OpenApi.Models.OpenApiContact()
+                                         {
+                                             Name = "Tzippy Freedman",
+                                             Email = "tzippyfreedman1@gmail.com",
 
-                    }
-                });
+                                         }
+                                     });
 
                     var xmlCommentsFile = $"{ Assembly.GetExecutingAssembly().GetName().Name}.xml";
                     var xmlCommentsFullPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
@@ -147,20 +148,20 @@ namespace CoronaApp.Api
                 }
                 setupAction.DocInclusionPredicate((documentName, apiDescription) =>
                        {
-                        var docApiVersionModel = apiDescription.ActionDescriptor.GetApiVersionModel(ApiVersionMapping.Explicit | ApiVersionMapping.Implicit);
-                        if (docApiVersionModel == null)
-                        {
-                            return true;
-                        }
-                        if (docApiVersionModel.DeclaredApiVersions.Any())
-                        {
-                            return docApiVersionModel.DeclaredApiVersions.Any(v =>
-                            $"CoronaAppOpenApiSpecificationv{v.ToString()}" == documentName);
-                        }
-                        return docApiVersionModel.DeclaredApiVersions.Any(v =>
-                          $"CoronaAppOpenApiSpecificationv{v.ToString()}" == documentName);
+                           var docApiVersionModel = apiDescription.ActionDescriptor.GetApiVersionModel(ApiVersionMapping.Explicit | ApiVersionMapping.Implicit);
+                           if (docApiVersionModel == null)
+                           {
+                               return true;
+                           }
+                           if (docApiVersionModel.DeclaredApiVersions.Any())
+                           {
+                               return docApiVersionModel.DeclaredApiVersions.Any(v =>
+                               $"CoronaAppOpenApiSpecificationv{v.ToString()}" == documentName);
+                           }
+                           return docApiVersionModel.DeclaredApiVersions.Any(v =>
+                             $"CoronaAppOpenApiSpecificationv{v.ToString()}" == documentName);
 
-                    });
+                       });
 
 
             });
@@ -169,7 +170,7 @@ namespace CoronaApp.Api
             {
                 setupAction.OutputFormatters.Add(new XmlSerializerOutputFormatter());
                 setupAction.ReturnHttpNotAcceptable = true;
- 
+
                 //setupAction.Filters.Add(
 
                 //    )
@@ -180,7 +181,7 @@ namespace CoronaApp.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,IApiVersionDescriptionProvider apiVersionDescriptionProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider apiVersionDescriptionProvider)
         {
             if (env.IsDevelopment())
             {

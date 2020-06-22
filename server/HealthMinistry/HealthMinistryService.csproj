@@ -7,10 +7,12 @@
 
   <ItemGroup>
     <PackageReference Include="NServiceBus" Version="7.3.0" />
+    <PackageReference Include="NServiceBus.Persistence.Sql" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Messages\Messages.csproj" />
+    <ProjectReference Include="..\Src\CoronaApp.Application\CoronaApp.Api.csproj" />
   </ItemGroup>
 
 </Project>

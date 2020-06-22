@@ -11,6 +11,10 @@ using Microsoft.Extensions.Logging;
 using NServiceBus;
 using Serilog;
 using Messages.Events;
+using NServiceBus.Transport;
+using CoronaApp.Api.Exceptions;
+using System.Data.SqlClient;
+
 
 namespace CoronaApp.Api
 {
@@ -23,8 +27,12 @@ namespace CoronaApp.Api
                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
                 .Build();
 
-        public static async Task Main(string[] args)
+         
+
+
+        public static void Main(string[] args)
         {
+
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(Configuration)
                  .CreateLogger();
@@ -61,8 +69,51 @@ namespace CoronaApp.Api
             Host.CreateDefaultBuilder(args)
             .UseNServiceBus(context =>
             {
+
+
                 var endpointConfiguration = new EndpointConfiguration("CoronaApp");
+
+                endpointConfiguration.EnableInstallers();
+
+                var recoverability = endpointConfiguration.Recoverability();
+
+                var outboxSettings = endpointConfiguration.EnableOutbox();
+
+                outboxSettings.KeepDeduplicationDataFor(TimeSpan.FromDays(6));
+                outboxSettings.RunDeduplicationDataCleanupEvery(TimeSpan.FromMinutes(15));
+
+
+
+                recoverability.Delayed(
+                    customizations: delayed =>
+                    {
+                        delayed.NumberOfRetries(2);
+                        delayed.TimeIncrease(TimeSpan.FromMinutes(5));
+                    });
+
+                recoverability.Immediate(
+                    customizations: immidiate =>
+                   {
+                       immidiate.NumberOfRetries(3);
+
+                   });
+
                 var transport = endpointConfiguration.UseTransport<LearningTransport>();
+
+                var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
+                var connection = Configuration.GetConnectionString("NServiceBusPersitence");
+
+                persistence.SqlDialect<SqlDialect.MsSqlServer>();
+
+                persistence.ConnectionBuilder(
+                    connectionBuilder: () =>
+                    {
+                        return new SqlConnection(connection);
+                    });
+
+                var subscriptions = persistence.SubscriptionSettings();
+                subscriptions.CacheFor(TimeSpan.FromMinutes(10));
+
                 var conventions = endpointConfiguration.Conventions();
                 conventions.DefiningCommandsAs(type => type.Namespace == "Messages.Commands");
                 conventions.DefiningEventsAs(type => type.Namespace == "Messages.Events");
@@ -80,7 +131,7 @@ namespace CoronaApp.Api
 
 
 
-
+        
 
 
     }
