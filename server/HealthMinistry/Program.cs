@@ -1,7 +1,10 @@
-﻿using CoronaApp.Api.Exceptions;
+﻿
+using CoronaApp.Api.Exceptions;
+using Messages.Commands;
 using NServiceBus;
 using NServiceBus.Transport;
 using System;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -18,15 +21,16 @@ namespace HealthMinistryService
 
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
 
-            var connection = "Server=localhost\\MSSQLSERVER01; Database= coronaInformation; Trusted_Connection = True;";
+            var persistenceConnection = ConfigurationManager.ConnectionStrings["persistenceConnection"].ToString();
 
+            var transportConnection = ConfigurationManager.ConnectionStrings["transportConnection"].ToString();
 
             persistence.SqlDialect<SqlDialect.MsSqlServer>();
 
             persistence.ConnectionBuilder(
                 connectionBuilder: () =>
                 {
-                    return new SqlConnection(connection);
+                    return new SqlConnection(persistenceConnection);
                 });
 
 
@@ -38,7 +42,15 @@ namespace HealthMinistryService
             var recoverability = endpointConfiguration.Recoverability();
                      recoverability.CustomPolicy(MyCoronaServiceRetryPolicy);
 
-            var transport = endpointConfiguration.UseTransport<LearningTransport>();
+            var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
+            transport.UseConventionalRoutingTopology()
+                .ConnectionString(transportConnection);
+
+
+              var routing = transport.Routing();
+            routing.RouteToEndpoint(typeof(INotifyQuarantine).Assembly, "HealthMinistryService");
+
+
 
 
             RecoverabilityAction MyCoronaServiceRetryPolicy(RecoverabilityConfig config, ErrorContext context)

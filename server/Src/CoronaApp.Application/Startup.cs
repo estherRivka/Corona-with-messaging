@@ -36,7 +36,7 @@ namespace CoronaApp.Api
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public async void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
 
      /*  var endpointConfiguration = new EndpointConfiguration("CoronaApplication");
@@ -55,9 +55,6 @@ namespace CoronaApp.Api
             services.AddScoped(typeof(IPathRepository), typeof(PathRepository));
             services.AddScoped(typeof(IPathService), typeof(PathService));
             services.AddScoped(typeof(IPatientService), typeof(PatientService));
-
-            //services.AddDbContext<CoronaContext>(options => options.UseSqlServer
-            //(Configuration.GetConnectionString("CoronaDBConnectionStringTzippy")));
 
             services.AddDbContext<CoronaContext>(options => options.UseSqlServer
             (Configuration.GetConnectionString("CoronaDBConnectionString")));
@@ -81,12 +78,6 @@ namespace CoronaApp.Api
 
             // services.AddIEndpointInstance();
             var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("AppSettings:Secret"));
-            //var appSettingsSection = Configuration.GetSection("AppSettings");
-            //services.Configure<AppSettings>(appSettingsSection);
-            ////Configuration.GetSection<string>
-            //// configure jwt authentication
-            //var appSettings = appSettingsSection.Get<AppSettings>();
-            //var key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
             services.AddAuthentication(x =>
             {

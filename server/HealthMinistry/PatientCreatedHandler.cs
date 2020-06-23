@@ -1,5 +1,4 @@
 ﻿
-using CoronaApp.Api.Exceptions;
 using Messages.Events;
 using NServiceBus;
 using NServiceBus.Logging;

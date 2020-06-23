@@ -15,13 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoronaApp.Dal", "Src\Corona
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoronaApp.Entities", "CoronaApp.Entities\CoronaApp.Entities.csproj", "{3F0673B4-8125-4628-8602-FF5A48DE7859}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messages", "Messages\Messages.csproj", "{A1F8F41B-BC29-4565-9E9D-52330821F19A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagenDavidAdomService", "MagenDavidAdom\MagenDavidAdomService.csproj", "{772C6B24-8519-4048-9B67-6CB55A0C14F5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthMinistryService", "HealthMinistry\HealthMinistryService.csproj", "{8966C63E-37E5-45D8-95FE-056700270500}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceMinistryService", "FinanceMinistryService\FinanceMinistryService.csproj", "{0394A816-3CF5-44A3-A9AC-970EF9FDAEC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinanceMinistryService", "FinanceMinistryService\FinanceMinistryService.csproj", "{0394A816-3CF5-44A3-A9AC-970EF9FDAEC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +47,6 @@ Global
 		{3F0673B4-8125-4628-8602-FF5A48DE7859}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F0673B4-8125-4628-8602-FF5A48DE7859}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F0673B4-8125-4628-8602-FF5A48DE7859}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1F8F41B-BC29-4565-9E9D-52330821F19A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1F8F41B-BC29-4565-9E9D-52330821F19A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1F8F41B-BC29-4565-9E9D-52330821F19A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1F8F41B-BC29-4565-9E9D-52330821F19A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{772C6B24-8519-4048-9B67-6CB55A0C14F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{772C6B24-8519-4048-9B67-6CB55A0C14F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{772C6B24-8519-4048-9B67-6CB55A0C14F5}.Release|Any CPU.ActiveCfg = Release|Any CPU

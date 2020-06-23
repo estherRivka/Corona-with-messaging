@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using NServiceBus;
 using NServiceBus.Routing;
-using RabbitMQ.Client;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -125,16 +124,12 @@ namespace CoronaApp.Services
 
         }
 
-        //ActionResult delete(int id)
-        //{
-        //    return _patientRepository.Delete(id);
-        //}
 
 
         public async Task PublishPatientCreated(Patient patient)
         {
 
-            await _messageSession.Publish<INotifyQuarantine>(message =>
+            await _messageSession.Publish<IPatientCreated>(message =>
             {
                 message.PatientId = patient.PatientId;
             })

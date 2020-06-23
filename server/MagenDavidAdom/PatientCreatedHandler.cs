@@ -1,4 +1,5 @@
 ﻿
+using Messages.Commands;
 using Messages.Events;
 using NServiceBus;
 using NServiceBus.Logging;
@@ -13,13 +14,24 @@ namespace MagenDavidAdomService
         public  Task Handle(IPatientCreated message, IMessageHandlerContext context)
         {
             log.Info($"Received PatientCreated, PatientId = {message.PatientId}");
-            //throw new Exception();
+
+            var options = new SendOptions();
+            options.RequireImmediateDispatch();
+            return context.Send<INotifyQuarantine>(msg =>
+             {
+                 msg.Patient = new Messages.Patient { Id = message.PatientId };
+             }, options);
 
 
-            return context.Publish<IPatientAdded>(message =>
-           {
-               message.PatientId = 100;
-           });
+
+           // throw new Exception();
+
+            /*            context.Send<ISendEmail>(msg =>
+                         {
+                             msg.Id = message.PatientId;
+                         }).ConfigureAwait(false);*/
+
+
 
         }
     }

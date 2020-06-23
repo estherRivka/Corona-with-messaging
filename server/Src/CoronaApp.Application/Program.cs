@@ -98,8 +98,11 @@ namespace CoronaApp.Api
 
                    });
 
-                var transport = endpointConfiguration.UseTransport<LearningTransport>();
+                var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
+                transport.UseConventionalRoutingTopology()
+                    .ConnectionString("host= localhost:5672");
 
+                
                 var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
                 var connection = Configuration.GetConnectionString("NServiceBusPersitence");
 

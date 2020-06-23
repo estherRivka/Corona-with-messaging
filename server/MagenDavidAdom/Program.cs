@@ -1,5 +1,7 @@
-﻿using NServiceBus;
+﻿using Messages.Commands;
+using NServiceBus;
 using System;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -15,16 +17,21 @@ namespace MagenDavidAdomService
 
             endpointConfiguration.EnableInstallers();
 
+            SubscribeToNotifications.Subscribe(endpointConfiguration);
+
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
 
-            var connection = "Server=localhost\\MSSQLSERVER01; Database= coronaInformation; Trusted_Connection = True;";
+            var persistenceConnection = ConfigurationManager.ConnectionStrings["persistenceConnection"].ToString();
+
+            var transportConnection = ConfigurationManager.ConnectionStrings["transportConnection"].ToString();
+
 
             persistence.SqlDialect<SqlDialect.MsSqlServer>();
 
             persistence.ConnectionBuilder(
                 connectionBuilder: () =>
                 {
-                    return new SqlConnection(connection);
+                    return new SqlConnection(persistenceConnection);
                 });
 
             var outboxSettings = endpointConfiguration.EnableOutbox();
@@ -44,7 +51,24 @@ namespace MagenDavidAdomService
                     delayed.TimeIncrease(TimeSpan.FromMinutes(5));
                 });
 
-            var transport = endpointConfiguration.UseTransport<LearningTransport>();
+            var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
+            transport.UseConventionalRoutingTopology()
+                .ConnectionString(transportConnection);
+
+            var scanner = endpointConfiguration.AssemblyScanner();
+            scanner.ExcludeAssemblies("System.Configuration.ConfigurationManager");
+
+
+            var routing = transport.Routing();
+
+            routing.RouteToEndpoint(
+                assembly: typeof(ISendEmail).Assembly,
+                destination: "FinanceMinistry");
+            /*
+                        routing.RouteToEndpoint(
+                            assembly: typeof(ISendEmail).Assembly,
+                            destination: "HealthMinistry");*/
+
 
             var conventions = endpointConfiguration.Conventions();
             conventions.DefiningCommandsAs(type => type.Namespace == "Messages.Commands");
