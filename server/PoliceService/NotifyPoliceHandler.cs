@@ -7,24 +7,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinanceMinistryService
+namespace PoliceService
 {
-    class NotifyQuarantineHandler : IHandleMessages<INotifyQuarantine>
+    public class NotifyPoliceHandler : IHandleMessages<INotifyPolice>
     {
         static ILog log = LogManager.GetLogger<IPatientCreated>();
 
-
-        public Task Handle(INotifyQuarantine message, IMessageHandlerContext context)
+        public Task Handle(INotifyPolice message, IMessageHandlerContext context)
         {
             log.Info($"Received PatientCreated, PatientId = {message.PatientId}");
-
-
-            return context.Publish<INotifiedQuarantine>(msg =>
-            {
-
-                msg.PatientId = message.PatientId;
-
-            });
+            return Task.CompletedTask;
         }
     }
 }

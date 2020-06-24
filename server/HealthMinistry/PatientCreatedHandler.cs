@@ -1,4 +1,5 @@
 ﻿
+using Messages.Commands;
 using Messages.Events;
 using NServiceBus;
 using NServiceBus.Logging;
@@ -9,7 +10,6 @@ namespace HealthMinistryService
 {
     public class PatientCreatedHandler : IHandleMessages<IPatientCreated>
     {
-        static Random random = new Random();
 
         static ILog log = LogManager.GetLogger<IPatientCreated>();
         public Task Handle(IPatientCreated message, IMessageHandlerContext context)
@@ -17,10 +17,10 @@ namespace HealthMinistryService
             log.Info($"Received PatientCreated, PatientId = {message.PatientId}");
 
 
-            //throw new PatientNotExistExcption();
-            //throw new Exception();
-
-            return Task.CompletedTask;
+            return context.Send<ISendEmail>(msg =>
+            {
+                msg.PatientId = message.PatientId;
+            });
 
 
         }

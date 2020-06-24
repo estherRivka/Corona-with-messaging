@@ -1,4 +1,5 @@
 ﻿using Messages.Commands;
+using Messages.Events;
 using NServiceBus;
 using NServiceBus.Logging;
 using System;
@@ -15,9 +16,12 @@ namespace HealthMinistryService
         static ILog log = LogManager.GetLogger<ISendEmail>();
         public Task Handle(ISendEmail message, IMessageHandlerContext context)
         {
-            log.Info($"Received PatientCreated, PatientId = {message.Id}");
+            log.Info($"Received PatientCreated, PatientId = {message.PatientId}");
 
-            return Task.CompletedTask;
+            return context.Publish<ISentEmail>(msg =>
+            {
+                msg.PatientId = message.PatientId;
+            });
 
 
         }

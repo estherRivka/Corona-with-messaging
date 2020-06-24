@@ -11,11 +11,17 @@ namespace MagenDavidAdomService
     {
         static async Task Main()
         {
-            Console.Title = "MagenDavidAdom";
+            const string endpointName = "MagenDavidAdom";
 
-            var endpointConfiguration = new EndpointConfiguration("MagenDavidAdom");
+            Console.Title = endpointName;
+
+            var endpointConfiguration = new EndpointConfiguration(endpointName);
 
             endpointConfiguration.EnableInstallers();
+            endpointConfiguration.AuditProcessedMessagesTo("audit");
+
+            endpointConfiguration.AuditSagaStateChanges(
+          serviceControlQueue: "Particular.Servicecontrol");
 
             SubscribeToNotifications.Subscribe(endpointConfiguration);
 
@@ -47,8 +53,8 @@ namespace MagenDavidAdomService
             recoverability.Delayed(
                 customizations: delayed =>
                 {
-                    delayed.NumberOfRetries(2);
-                    delayed.TimeIncrease(TimeSpan.FromMinutes(5));
+                    delayed.NumberOfRetries(3);
+                    delayed.TimeIncrease(TimeSpan.FromMinutes(1));
                 });
 
             var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
@@ -62,12 +68,9 @@ namespace MagenDavidAdomService
             var routing = transport.Routing();
 
             routing.RouteToEndpoint(
-                assembly: typeof(ISendEmail).Assembly,
+                assembly: typeof(INotifyQuarantine).Assembly,
                 destination: "FinanceMinistry");
-            /*
-                        routing.RouteToEndpoint(
-                            assembly: typeof(ISendEmail).Assembly,
-                            destination: "HealthMinistry");*/
+
 
 
             var conventions = endpointConfiguration.Conventions();

@@ -57,9 +57,6 @@ namespace CoronaApp.Api
             }
             finally
             {
-                /* await endpointInstance.Stop()
-                   .ConfigureAwait(false);
-                */
                 Log.CloseAndFlush();
             }
         }
@@ -75,6 +72,12 @@ namespace CoronaApp.Api
 
                 endpointConfiguration.EnableInstallers();
 
+                endpointConfiguration.AuditProcessedMessagesTo("audit");
+
+                endpointConfiguration.AuditSagaStateChanges(
+          serviceControlQueue: "Particular.Servicecontrol");
+
+
                 var recoverability = endpointConfiguration.Recoverability();
 
                 var outboxSettings = endpointConfiguration.EnableOutbox();
@@ -88,7 +91,7 @@ namespace CoronaApp.Api
                     customizations: delayed =>
                     {
                         delayed.NumberOfRetries(2);
-                        delayed.TimeIncrease(TimeSpan.FromMinutes(5));
+                        delayed.TimeIncrease(TimeSpan.FromMinutes(4));
                     });
 
                 recoverability.Immediate(

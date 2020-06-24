@@ -15,21 +15,12 @@ namespace MagenDavidAdomService
         {
             log.Info($"Received PatientCreated, PatientId = {message.PatientId}");
 
-            var options = new SendOptions();
-            options.RequireImmediateDispatch();
+
             return context.Send<INotifyQuarantine>(msg =>
-             {
-                 msg.Patient = new Messages.Patient { Id = message.PatientId };
-             }, options);
-
-
-
-           // throw new Exception();
-
-            /*            context.Send<ISendEmail>(msg =>
-                         {
-                             msg.Id = message.PatientId;
-                         }).ConfigureAwait(false);*/
+              {
+                  msg.Patient = new Messages.Patient { Id = message.PatientId };
+                  msg.PatientId = message.PatientId;
+              });
 
 
 

@@ -15,8 +15,7 @@ namespace FinanceMinistryService
         {
             log.Info($"Received PatientCreated, PatientId = {message.PatientId}");
             //throw new Exception();
-
-            return Task.CompletedTask;
+             return Task.CompletedTask;
 
         }
     }

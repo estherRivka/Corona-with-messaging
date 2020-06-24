@@ -1,7 +1,9 @@
-﻿using NServiceBus;
+﻿using Messages.Events;
+using NServiceBus;
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace FinanceMinistryService
@@ -10,11 +12,20 @@ namespace FinanceMinistryService
     {
         static async Task Main()
         {
-            Console.Title = "FinanceMinistry";
+            const string endpointName = "FinanceMinistry";
+            Console.Title = endpointName;
 
-            var endpointConfiguration = new EndpointConfiguration("FinanceMinistry");
+            var endpointConfiguration = new EndpointConfiguration(endpointName);
 
             endpointConfiguration.EnableInstallers();
+
+            endpointConfiguration.AuditProcessedMessagesTo("audit");
+
+            endpointConfiguration.AuditSagaStateChanges(
+          serviceControlQueue: "Particular.Servicecontrol");
+
+
+
 
             SubscribeToNotifications.Subscribe(endpointConfiguration);
 
@@ -46,13 +57,16 @@ namespace FinanceMinistryService
             recoverability.Delayed(
                 customizations: delayed =>
                 {
-                    delayed.NumberOfRetries(2);
-                    delayed.TimeIncrease(TimeSpan.FromMinutes(5));
+                    delayed.NumberOfRetries(3);
+                    delayed.TimeIncrease(TimeSpan.FromMinutes(3));
                 });
 
             var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
             transport.UseConventionalRoutingTopology()
                 .ConnectionString(transportConnection);
+
+            var routing = transport.Routing();
+
 
             var conventions = endpointConfiguration.Conventions();
             conventions.DefiningCommandsAs(type => type.Namespace == "Messages.Commands");
