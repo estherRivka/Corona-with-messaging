@@ -7,6 +7,7 @@ using Messages.Commands;
 using Messages.Events;
 using NServiceBus.Logging;
 using Microsoft.VisualBasic;
+using System.Threading;
 
 namespace IsolationService
 {
@@ -21,8 +22,7 @@ namespace IsolationService
         {
             log.Info($"Email sent, PatientId = {message.PatientId}");
             Data.IsSentEmail = true;
-
-            await RequestTimeout(context, TimeSpan.FromSeconds(60), new QuarantineOver { PatientId = Data.PatientId});
+            Thread.Sleep(10000);
 
             await NotifyPolice(context);
         }
@@ -31,6 +31,7 @@ namespace IsolationService
         {
             log.Info($"notified quarantine, PatientId = {message.PatientId}");
             Data.IsNotifiedQuarantine = true;
+     
             return NotifyPolice(context);
 
         }
@@ -62,12 +63,13 @@ namespace IsolationService
         {
             if (Data.IsNotifiedQuarantine && Data.IsSentEmail)
             {
-              await  context.Send<INotifyPolice>(message =>
-               {
-                   message.PatientId = Data.PatientId;
-               }).ConfigureAwait(false);
+                await context.Send<INotifyPolice>(message =>
+                {
+                    message.PatientId = Data.PatientId;
+                }).ConfigureAwait(false);
 
-                //MarkAsComplete();
+                await RequestTimeout(context, TimeSpan.FromSeconds(60), new QuarantineOver { PatientId = Data.PatientId });
+
             }
         }
     }
