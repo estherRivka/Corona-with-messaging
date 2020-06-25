@@ -132,6 +132,8 @@ namespace CoronaApp.Services
             await _messageSession.Publish<IPatientCreated>(message =>
             {
                 message.PatientId = patient.PatientId;
+                message.pathImpl = new Messages.Path();
+                message.pathImpl.address = "aaa";
             })
                  .ConfigureAwait(false);
         }

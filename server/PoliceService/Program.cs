@@ -1,4 +1,5 @@
 ﻿
+using Newtonsoft.Json;
 using NServiceBus;
 using System;
 using System.Configuration;
@@ -22,8 +23,15 @@ namespace PoliceService
             endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             endpointConfiguration.AuditSagaStateChanges(
-          serviceControlQueue: "Particular.Servicecontrol");
-
+                  serviceControlQueue: "Particular.Servicecontrol");
+/*
+            var settings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented
+            };
+            var serialization = endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
+            serialization.Settings(settings);
+*/
 
 
 

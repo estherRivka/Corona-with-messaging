@@ -2,6 +2,7 @@
 using CoronaApp.Api.Exceptions;
 using Messages.Commands;
 using Messages.Events;
+using Newtonsoft.Json;
 using NServiceBus;
 using NServiceBus.Transport;
 using System;
@@ -25,7 +26,14 @@ namespace HealthMinistryService
             endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             endpointConfiguration.AuditSagaStateChanges(
-          serviceControlQueue: "Particular.Servicecontrol");
+                   serviceControlQueue: "Particular.Servicecontrol");
+
+/*            var settings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented
+            };
+            var serialization = endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
+            serialization.Settings(settings);*/
 
 
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();

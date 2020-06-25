@@ -14,7 +14,7 @@ using Messages.Events;
 using NServiceBus.Transport;
 using CoronaApp.Api.Exceptions;
 using System.Data.SqlClient;
-
+using Newtonsoft.Json;
 
 namespace CoronaApp.Api
 {
@@ -75,7 +75,14 @@ namespace CoronaApp.Api
                 endpointConfiguration.AuditProcessedMessagesTo("audit");
 
                 endpointConfiguration.AuditSagaStateChanges(
-          serviceControlQueue: "Particular.Servicecontrol");
+                        serviceControlQueue: "Particular.Servicecontrol");
+
+/*                var settings = new JsonSerializerSettings
+                {
+                    Formatting = Formatting.Indented
+                };
+                var serialization = endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
+                serialization.Settings(settings);*/
 
 
                 var recoverability = endpointConfiguration.Recoverability();
