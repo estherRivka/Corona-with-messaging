@@ -28,15 +28,16 @@ namespace HealthMinistryService
             endpointConfiguration.AuditSagaStateChanges(
                    serviceControlQueue: "Particular.Servicecontrol");
 
-/*            var settings = new JsonSerializerSettings
+            var settings = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented
             };
             var serialization = endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
-            serialization.Settings(settings);*/
+            serialization.Settings(settings);
 
 
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
+           
 
             var persistenceConnection = ConfigurationManager.ConnectionStrings["persistenceConnection"].ToString();
 

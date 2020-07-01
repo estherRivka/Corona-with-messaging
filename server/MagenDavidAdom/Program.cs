@@ -24,12 +24,12 @@ namespace MagenDavidAdomService
             endpointConfiguration.AuditSagaStateChanges(
                    serviceControlQueue: "Particular.Servicecontrol");
 
-/*            var settings = new JsonSerializerSettings
+            var settings = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented
             };
             var serialization = endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
-            serialization.Settings(settings);*/
+            serialization.Settings(settings);
 
             SubscribeToNotifications.Subscribe(endpointConfiguration);
 

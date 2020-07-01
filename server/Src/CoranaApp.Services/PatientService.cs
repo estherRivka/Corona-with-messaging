@@ -82,7 +82,7 @@ namespace CoronaApp.Services
             patient = _mapper.Map<Patient>(updatedPatient);
 
             Patient updatedPatientFromDbs = await _patientRepository.Update(patient);
-            Log.Information("Patient with id {@id} updated {@newPatient}", updatedPatientFromDbs.PatientId, updatedPatientFromDbs);
+            //Log.Information("Patient with id {@id} updated {@newPatient}", updatedPatientFromDbs.PatientId, updatedPatientFromDbs);
             return _mapper.Map<PatientModel>(updatedPatientFromDbs);
 
         }

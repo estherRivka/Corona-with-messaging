@@ -6,6 +6,8 @@ using System;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Serialization;
+using System.Runtime.Serialization;
 
 namespace IsolationService
 {
@@ -26,12 +28,14 @@ namespace IsolationService
             endpointConfiguration.AuditSagaStateChanges(
                       serviceControlQueue: "Particular.Servicecontrol");
 
-/*            var settings = new JsonSerializerSettings
+            var settings = new JsonSerializerSettings
             {
-                Formatting = Formatting.Indented
+                Formatting = Formatting.Indented,
+                //SerializationBinder = SerializationBinder.
+                //TypeNameHandling = TypeNameHandling.All
             };
             var serialization = endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
-            serialization.Settings(settings);*/
+            serialization.Settings(settings);
 
 
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();

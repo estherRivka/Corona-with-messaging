@@ -24,16 +24,16 @@ namespace PoliceService
 
             endpointConfiguration.AuditSagaStateChanges(
                   serviceControlQueue: "Particular.Servicecontrol");
-/*
+
             var settings = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented
             };
             var serialization = endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             serialization.Settings(settings);
-*/
 
 
+            
 
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
 

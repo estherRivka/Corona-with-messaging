@@ -39,18 +39,6 @@ namespace CoronaApp.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-     /*  var endpointConfiguration = new EndpointConfiguration("CoronaApplication");
-
-             var transport = endpointConfiguration.UseTransport<LearningTransport>();
-
-
-            var endpointInstance = await NServiceBus.Endpoint.Start(endpointConfiguration);
-
-            var endpointInstance = services.BuildServiceProvider().GetService<IMessageSession>()
-            .ConfigureAwait(false);
-
-            services.AddScoped(typeof(IEndpointInstance), x => endpointInstance);*/
-
             services.AddScoped(typeof(IPatientRepository), typeof(PatientRepository));
             services.AddScoped(typeof(IPathRepository), typeof(PathRepository));
             services.AddScoped(typeof(IPathService), typeof(PathService));
@@ -66,7 +54,7 @@ namespace CoronaApp.Api
                 options.AddPolicy("Policy1",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:8080");
+                        builder.WithOrigins("http://localhost:8080", "http://localhost:4200" );
                         builder.AllowCredentials();
                         builder.AllowAnyHeader();
                         builder.WithMethods("GET", "POST", "PUT");
